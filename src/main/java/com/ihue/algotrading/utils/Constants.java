@@ -14,7 +14,6 @@ public interface Constants {
     String SOURCE_PATH = "." + File.separator + "complete.csv.gz";
     String TARGET_PATH = "." + File.separator + "complete.csv";
     ZoneId IST_ZID = ZoneId.of("IST", ZoneId.SHORT_IDS);
-    Map<String, List<OneMinAggregateDatum>> SCRIP_AGGR = new HashMap<>();
 
     Map<String, Map<Long, OneMinAggregateDatum>> dataMap = new HashMap<>();
     Map<String, TradeVals> values = new HashMap<>();

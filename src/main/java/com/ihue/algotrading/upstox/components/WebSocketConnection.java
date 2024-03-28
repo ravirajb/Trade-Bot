@@ -3,8 +3,6 @@ package com.ihue.algotrading.upstox.components;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.ihue.algotrading.upstox.model.OneMinAggregateDatum;
-import com.ihue.algotrading.upstox.model.TradeVals;
 import com.ihue.algotrading.upstox.service.TradeService;
 import com.upstox.marketdatafeeder.rpc.proto.Upstox;
 import lombok.extern.log4j.Log4j2;
@@ -18,10 +16,6 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-
-import static com.ihue.algotrading.utils.Constants.*;
-import static com.ihue.algotrading.utils.Utilities.buildMap;
-import static com.ihue.algotrading.utils.Utilities.getEma;
 
 @Component("wsClient")
 @Log4j2
