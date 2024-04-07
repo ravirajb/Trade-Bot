@@ -151,6 +151,115 @@ public class Utilities {
         return oneMinDatum;
     }
 
+    public static double getEma(int period, String indicator, String key) {
+        double periodEma = 0;
+
+        double multiplier = (double) 2 / (period + 1);
+        TradeVals vals = values.get(key);
+        SortedSet<Long> sortedKeys = new TreeSet<>(dataMap.get(key).keySet())
+                .descendingSet();
+        if(!sortedKeys.isEmpty())
+            sortedKeys.remove(sortedKeys.iterator().next());
+
+        var firstElem = dataMap.get(key).get(sortedKeys.iterator().next());
+        switch (period) {
+            case 2:
+                if (vals.getTwoEma() == 0) {
+                    double sum = 0d;
+                    int lc = 0;
+                    for (Long sortedKey : sortedKeys) {
+                        if (indicator.equals("L")) {
+                            sum = sum + dataMap.get(key).get(sortedKey).getClose();
+                        } else{
+                            sum = sum + dataMap.get(key).get(sortedKey).getHigh();
+                        }
+                        lc++;
+                        if (lc > 1) break;
+                    }
+                    if (indicator.equals("L")) {
+                        periodEma = ((firstElem.getClose() - sum / 2) * multiplier) + sum / 2;
+                    } else {
+                        periodEma = (((firstElem.getHigh()) - sum / 2) * multiplier) + sum / 2;
+                    }
+
+                } else {
+                    if (indicator.equals("L")) {
+                        periodEma = ((firstElem.getClose() - vals.getTwoEma()) * multiplier) + vals.getTwoEma();
+                    } else {
+                        periodEma = ((firstElem.getHigh() - vals.getTwoEmaH()) * multiplier) + vals.getTwoEmaH();
+                    }
+                }
+                if (indicator.equals("L")) {
+                    vals.setTwoEma(periodEma);
+                } else {
+                    vals.setTwoEmaH(periodEma);
+                }
+                return periodEma;
+            case 3:
+                if (vals.getThreeEma() == 0) {
+                    double sum = 0;
+                    int lc = 0;
+                    for (Long sortedKey : sortedKeys) {
+                        if (indicator.equals("L")) {
+                            sum = sum + dataMap.get(key).get(sortedKey).getClose();
+                        } else{
+                            sum = sum + dataMap.get(key).get(sortedKey).getHigh();
+                        }
+                        lc++;
+                        if (lc > 2) break;
+                    }
+                    if (indicator.equals("L")) {
+                        periodEma = ((firstElem.getClose() - sum / 3) * multiplier) + sum / 3;
+                    } else {
+                        periodEma = ((firstElem.getHigh() - sum / 3) * multiplier) + sum / 3;
+                    }
+
+                } else {
+                    if (indicator.equals("L")) {
+                        periodEma = ((firstElem.getClose() - vals.getThreeEma()) * multiplier) + vals.getThreeEma();
+                    } else {
+                        periodEma = ((firstElem.getHigh() - vals.getThreeEmaH()) * multiplier) + vals.getThreeEmaH();
+                    }
+
+                }
+                if (indicator.equals("L")) {
+                    vals.setThreeEma(periodEma);
+                } else {
+                    vals.setThreeEmaH(periodEma);
+                }
+
+                return periodEma;
+            case 5:
+                if (vals.getFiveEma() == 0) {
+                    double sum = 0;
+                    int lc = 0;
+                    for (Long sortedKey : sortedKeys) {
+                        if (indicator.equals("L")) {
+                            sum = sum + dataMap.get(key).get(sortedKey).getClose();
+                        } else{
+                            sum = sum + dataMap.get(key).get(sortedKey).getHigh();
+                        }
+                        lc++;
+                        if (lc > 4) break;
+                    }
+                    if (indicator.equals("L")) {
+                        periodEma = ((firstElem.getClose() - sum / 5) * multiplier) + sum / 5;
+                    } else {
+                        periodEma = ((firstElem.getHigh() - sum / 5) * multiplier) + sum / 5;
+                    }
+                } else {
+                    if (indicator.equals("L")) {
+                        periodEma = ((firstElem.getClose() - vals.getFiveEma()) * multiplier) + vals.getFiveEma();
+                    } else {
+                        periodEma = ((firstElem.getHigh() - vals.getFiveEma()) * multiplier) + vals.getFiveEma();
+                    }
+                }
+                vals.setFiveEma(periodEma);
+                return periodEma;
+            default: return 0;
+        }
+    }
+
     public static double getEma(int period, String indicator, String key, OneMinAggregateDatum oneMinAggregateDatum) {
         double periodEma = 0;
         double multiplier = (double) 2 / (period + 1);
@@ -278,6 +387,62 @@ public class Utilities {
                 }
                 vals.setFiveEma(periodEma);
                 return periodEma;
+            case 21:
+                if (vals.getFiveEma() == 0) {
+                    double sum = 0;
+                    int lc = 0;
+                    for (Long sortedKey : sortedKeys) {
+                        if (indicator.equals("L")) {
+                            sum = sum + dataMap.get(key).get(sortedKey).getClose();
+                        } else{
+                            sum = sum + dataMap.get(key).get(sortedKey).getHigh();
+                        }
+                        lc++;
+                        if (lc > 2) break;
+                    }
+                    if (indicator.equals("L")) {
+                        periodEma = ((oneMinAggregateDatum.getClose() - sum / 21) * multiplier) + sum / 21;
+                    } else {
+                        periodEma = ((oneMinAggregateDatum.getHigh() - sum / 21) * multiplier) + sum / 21;
+                    }
+                } else {
+                    if (indicator.equals("L")) {
+                        periodEma = ((oneMinAggregateDatum.getClose() - vals.getFiveEma()) * multiplier) + vals.getFiveEma();
+                    } else {
+                        periodEma = ((oneMinAggregateDatum.getHigh() - vals.getFiveEma()) * multiplier) + vals.getFiveEma();
+                    }
+                }
+                vals.setFiveEma(periodEma);
+                return periodEma;
+
+            case 84:
+                if (vals.getFiveEma() == 0) {
+                    double sum = 0;
+                    int lc = 0;
+                    for (Long sortedKey : sortedKeys) {
+                        if (indicator.equals("L")) {
+                            sum = sum + dataMap.get(key).get(sortedKey).getClose();
+                        } else{
+                            sum = sum + dataMap.get(key).get(sortedKey).getHigh();
+                        }
+                        lc++;
+                        if (lc > 2) break;
+                    }
+                    if (indicator.equals("L")) {
+                        periodEma = ((oneMinAggregateDatum.getClose() - sum / 84) * multiplier) + sum / 84;
+                    } else {
+                        periodEma = ((oneMinAggregateDatum.getHigh() - sum / 84) * multiplier) + sum / 84;
+                    }
+                } else {
+                    if (indicator.equals("L")) {
+                        periodEma = ((oneMinAggregateDatum.getClose() - vals.getFiveEma()) * multiplier) + vals.getFiveEma();
+                    } else {
+                        periodEma = ((oneMinAggregateDatum.getHigh() - vals.getFiveEma()) * multiplier) + vals.getFiveEma();
+                    }
+                }
+                vals.setFiveEma(periodEma);
+                return periodEma;
+
             default:
                 return 0;
         }

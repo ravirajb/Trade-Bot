@@ -3,6 +3,7 @@ package com.ihue.algotrading.upstox.components;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.ihue.algotrading.upstox.dao.StocksDAO;
 import com.ihue.algotrading.upstox.service.TradeService;
 import com.upstox.marketdatafeeder.rpc.proto.Upstox;
 import lombok.extern.log4j.Log4j2;
@@ -70,9 +71,7 @@ public class WebSocketConnection extends WebSocketClient {
         JsonObject dataObject = new JsonObject();
         dataObject.addProperty("mode", "full");
 
-        JsonArray instrumentKeys = new Gson().toJsonTree(Arrays.asList(
-                        "NSE_EQ|INE021A01026", "NSE_EQ|INE066A01021", "NSE_EQ|INE158A01026",
-                        "NSE_EQ|INE081A01020", "NSE_EQ|INE002A01018", "NSE_EQ|INE154A01025"))
+        JsonArray instrumentKeys = new Gson().toJsonTree(Arrays.asList("NSE_EQ|INE081A01020"))
                 .getAsJsonArray();
         dataObject.add("instrumentKeys", instrumentKeys);
 
@@ -87,6 +86,7 @@ public class WebSocketConnection extends WebSocketClient {
     private void handleBinaryMessage(ByteBuffer bytes) {
         try {
             Upstox.FeedResponse feedResponse = Upstox.FeedResponse.parseFrom(bytes.array());
+            // System.out.println(feedResponse);
             tradeService.doTrades(feedResponse);
 
         } catch (Exception e) {

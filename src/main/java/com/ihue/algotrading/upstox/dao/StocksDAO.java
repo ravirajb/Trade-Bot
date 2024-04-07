@@ -8,7 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Log4j2
@@ -23,8 +25,8 @@ public class StocksDAO {
     }
 
     public List<Upstox.LTPC> getTrades() {
-        return jdbcTemplate.query("select scrip_name, last_trade_time , last_trade_price , last_trade_quantity  " +
-                "from stock_info si where scrip_name = 'NSE_FO|53951' order by created_at asc",
+        return jdbcTemplate.query("select distinct scrip_name, last_trade_time , last_trade_price , last_trade_quantity  " +
+                "from stock_info si where scrip_name = 'NSE_FO|53951' order by last_trade_time   asc",
                 (rs, rowNum) ->
                         Upstox.LTPC.newBuilder()
                                 .setLtp(rs.getFloat("last_trade_price"))
@@ -34,7 +36,16 @@ public class StocksDAO {
                 );
     }
 
-    public void insertAggr() {
+    public void insertStock(Upstox.LTPC ltpc, String key) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("scripName", key);
+        params.put("ltt", ltpc.getLtt());
+        params.put("ltq", ltpc.getLtq());
+        params.put("ltp", ltpc.getLtp());
+        params.put("cp", ltpc.getCp());
+
+        String INSERT_STMT = "INSERT INTO stock(scrip_name, ltt, ltq, ltp, cp) VALUES(?, ?, ?, ?, ?)";
+        jdbcTemplate.update(INSERT_STMT, key,ltpc.getLtt(), ltpc.getLtq(),ltpc.getLtp(), ltpc.getCp()  );
 
     }
 }

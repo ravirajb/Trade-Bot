@@ -17,6 +17,7 @@ public class TradeVals {
     private boolean tradeBooked = false;
     private double tradeBookPrice = 0;
     private long lastTradedTime;
+    private long lastTradedMinute;
     private int coolingPeriod;
     private List<String> buyOrders = Collections.EMPTY_LIST;
     private List<String> sellOrders = Collections.EMPTY_LIST;

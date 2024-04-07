@@ -24,7 +24,7 @@ public class AlgoTradingApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // ruleValidator.validate();
+        //ruleValidator.validate();
         WebSocketConnection client = applicationContext.getBean(WebSocketConnection.class);
         client.connect();
 
